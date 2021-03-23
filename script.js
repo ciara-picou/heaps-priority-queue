@@ -97,7 +97,8 @@ class MaxBinaryHeap {
         swap = rightChildIndex;
       }
       //if no swap has occured by this point then
-      //the parent is greater than its children and the order is correct
+      //the parent is greater than both of its children
+      // and the order of elements in this.values follows the rules of a max heap
       // our work is done here we may break out of our loop
       if (swap === null) break;
       //if not then we must actually make the swap and continue to the next iteration
@@ -109,6 +110,7 @@ class MaxBinaryHeap {
       this.values[idx] = this.values[swap];
       this.values[swap] = element;
       idx = swap;
+
       console.log("after swap", this.values[idx], "this.values[idx]");
       console.log("after swap", element, "element");
       console.log("after swap", this.values, "this.values");
@@ -124,7 +126,41 @@ heap.insert(18);
 heap.insert(27);
 heap.insert(12);
 heap.insert(55);
+console.log(heap);
 
-heap.extractMax();
-heap.extractMax();
-console.log(heap.values);
+// heap.extractMax();
+// heap.extractMax();
+// console.log(heap.values);
+
+class MinBinaryHeap {
+  constructor() {
+    this.values = [];
+  }
+  insert(element) {
+    this.values.push(element);
+    this.bubbleUp();
+  }
+  bubbleUp() {
+    let idx = this.values.length - 1;
+    let element = this.values[idx];
+    while (idx > 0) {
+      let parentIdx = Math.floor((idx - 1) / 2);
+      let parent = this.values[parentIdx];
+
+      if (parent <= element) break;
+      this.values[parentIdx] = element;
+      this.values[idx] = parent;
+      idx = parentIdx;
+    }
+  }
+}
+
+let minHeap = new MinBinaryHeap();
+minHeap.insert(41);
+minHeap.insert(39);
+minHeap.insert(33);
+minHeap.insert(18);
+minHeap.insert(27);
+minHeap.insert(12);
+minHeap.insert(55);
+console.log(minHeap);
