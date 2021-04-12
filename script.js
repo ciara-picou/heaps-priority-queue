@@ -116,53 +116,6 @@ class MaxBinaryHeap {
       console.log("after swap", this.values, "this.values");
     }
   }
-
-  extractMax() {
-    let max = this.values[0];
-    let end = this.values.pop();
-    if (this.values.length > 0) {
-      this.values[0] = end;
-      this.bubbleDown();
-    }
-    return max;
-  }
-  bubbleDown() {
-    let idx = 0;
-    let element = this.values[0];
-    let length = this.values.length;
-    while (true) {
-      let leftChildIdx = 2 * idx + 1; //2n + 1
-      let rightChildIdx = 2 * idx + 2; //2n +2
-      let leftChild, rightChild;
-      let swap = null;
-      if (leftChildIdx < length) {
-        leftChild = this.values[leftChildIdx];
-        if (leftChild > element) {
-          swap = leftChildIdx;
-        }
-      }
-      if (rightChildIdx < length) {
-        rightChild = this.values[rightChildIdx];
-        if (
-          (swap == null && rightChild > element) ||
-          (!swap == null && rightChild > leftChild)
-        ) {
-        }
-        if (
-          (swap == null && rightChild > element) ||
-          (swap !== null && rightChild > leftChild)
-        ) {
-          swap = rightChildIdx;
-        }
-
-        if (swap === null) break;
-
-        this.values[idx] = this.values[swap];
-        this.values[swap] = element;
-        idx = swap;
-      }
-    }
-  }
 }
 //       55                                               12
 //   41      39                                      41        39
