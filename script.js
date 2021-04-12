@@ -116,17 +116,68 @@ class MaxBinaryHeap {
       console.log("after swap", this.values, "this.values");
     }
   }
-}
 
-let heap = new MaxBinaryHeap();
-heap.insert(41);
-heap.insert(39);
-heap.insert(33);
-heap.insert(18);
-heap.insert(27);
-heap.insert(12);
-heap.insert(55);
-console.log(heap);
+  extractMax() {
+    let max = this.values[0];
+    let end = this.values.pop();
+    if (this.values.length > 0) {
+      this.values[0] = end;
+      this.bubbleDown();
+    }
+    return max;
+  }
+  bubbleDown() {
+    let idx = 0;
+    let element = this.values[0];
+    let length = this.values.length;
+    while (true) {
+      let leftChildIdx = 2 * idx + 1; //2n + 1
+      let rightChildIdx = 2 * idx + 2; //2n +2
+      let leftChild, rightChild;
+      let swap = null;
+      if (leftChildIdx < length) {
+        leftChild = this.values[leftChildIdx];
+        if (leftChild > element) {
+          swap = leftChildIdx;
+        }
+      }
+      if (rightChildIdx < length) {
+        rightChild = this.values[rightChildIdx];
+        if (
+          (swap == null && rightChild > element) ||
+          (!swap == null && rightChild > leftChild)
+        ) {
+        }
+        if (
+          (swap == null && rightChild > element) ||
+          (swap !== null && rightChild > leftChild)
+        ) {
+          swap = rightChildIdx;
+        }
+
+        if (swap === null) break;
+
+        this.values[idx] = this.values[swap];
+        this.values[swap] = element;
+        idx = swap;
+      }
+    }
+  }
+}
+//       55                                               12
+//   41      39                                      41        39
+// 33 27    18  12    first step of bubbleDown    33    27   18
+
+// this.values = [55, 39, 41, 18, 27, 12, 33]
+// let heap = new MaxBinaryHeap();
+// heap.insert(41);
+// heap.insert(39);
+// heap.insert(33);
+// heap.insert(18);
+// heap.insert(27);
+// heap.insert(12);
+// heap.insert(55);
+// console.log(heap);
 
 // heap.extractMax();
 // heap.extractMax();
@@ -153,6 +204,60 @@ class MinBinaryHeap {
       idx = parentIdx;
     }
   }
+
+  extractMin() {
+    let min = this.values[0];
+    let end = this.values.pop();
+
+    if (this.values.length > 0) {
+      this.values[0] = end;
+      this.bubbleDown();
+    }
+    console.log(min);
+    return min;
+  }
+  bubbleDown() {
+    let indx = 0;
+    let element = this.values[0];
+    let length = this.values.length;
+
+    while (true) {
+      let leftChildIdx = 2 * indx + 1;
+      let rightChildIdx = 2 * indx + 2;
+      let rightChild, leftChild;
+      let swap = null;
+
+      if (leftChildIdx < length) {
+        leftChild = this.values[leftChildIdx];
+        if (leftChild < element) {
+          swap = leftChildIdx;
+        }
+      }
+      if (rightChildIdx < length) {
+        rightChild = this.values[rightChildIdx];
+      }
+
+      if (
+        (swap == null && rightChild < element) ||
+        (swap !== null && rightChild < leftChild)
+      ) {
+        swap = rightChildIdx;
+      }
+
+      //Swap Places:
+
+      //place swap's element in the indx position
+      this.values[indx] = this.values[swap];
+      //place the element we've been comparing in swap's postion
+      this.values[swap] = element;
+      // replace the index contained in the comparison variable called idx
+      // with the "swap" index
+      // indx starts at 0 and becomes larger as we go deeper into the heap
+      indx = swap;
+      //swap will only equal null once every node is in its correct place
+      if (swap == null) break;
+    }
+  }
 }
 
 let minHeap = new MinBinaryHeap();
@@ -163,4 +268,83 @@ minHeap.insert(18);
 minHeap.insert(27);
 minHeap.insert(12);
 minHeap.insert(55);
+
 console.log(minHeap);
+minHeap.extractMin();
+
+class Node {
+  constructor(val, priority) {
+    this.val = val;
+    this.priority = priority;
+  }
+}
+
+class PriorityQueue {
+  constructor() {
+    this.values = [];
+  }
+  enqueue(val, priority) {
+    let newNode = new Node(val, priority);
+    this.values.push(newNode);
+    this.bubbleUp();
+  }
+  bubbleUp() {
+    let idx = this.values.length - 1;
+    const element = this.values[idx];
+    while (idx > 0) {
+      let parentIdx = Math.floor((idx - 1) / 2);
+      let parent = this.values[parentIdx];
+      if (element.priority >= parent.priority) break;
+      this.values[parentIdx] = element;
+      this.values[idx] = parent;
+      idx = parentIdx;
+    }
+  }
+  dequeue() {
+    const min = this.values[0];
+    const end = this.values.pop();
+    if (this.values.length > 0) {
+      this.values[0] = end;
+      this.bubbleDown();
+    }
+    return min;
+  }
+  bubbleDown() {
+    let idx = 0;
+    const length = this.values.length;
+    const element = this.values[0];
+    while (true) {
+      let leftChildIdx = 2 * idx + 1;
+      let rightChildIdx = 2 * idx + 2;
+      let leftChild, rightChild;
+      let swap = null;
+
+      if (leftChildIdx < length) {
+        leftChild = this.values[leftChildIdx];
+        if (leftChild.priority < element.priority) {
+          swap = leftChildIdx;
+        }
+      }
+      if (rightChildIdx < length) {
+        rightChild = this.values[rightChildIdx];
+        if (
+          (swap === null && rightChild.priority < element.priority) ||
+          (swap !== null && rightChild.priority < leftChild.priority)
+        ) {
+          swap = rightChildIdx;
+        }
+      }
+      if (swap === null) break;
+      this.values[idx] = this.values[swap];
+      this.values[swap] = element;
+      idx = swap;
+    }
+  }
+}
+
+let ER = new PriorityQueue();
+ER.enqueue("common cold", 5);
+ER.enqueue("gunshot wound", 1);
+ER.enqueue("high fever", 4);
+ER.enqueue("broken arm", 2);
+ER.enqueue("glass in foot", 3);
